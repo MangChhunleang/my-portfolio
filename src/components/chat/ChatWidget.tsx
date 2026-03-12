@@ -23,6 +23,7 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const apiUrl = import.meta.env.PROD ? "/chatbot/chatbot/chat" : "/api/chat";
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -49,7 +50,6 @@ export function ChatWidget() {
     setIsLoading(true);
 
     try {
-      const apiUrl = import.meta.env.PROD ? '/chatbot/chat' : '/api/chat';
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -61,16 +61,23 @@ export function ChatWidget() {
         }),
       });
 
-      const data = await response.json();
+      const contentType = response.headers.get("content-type") || "";
+      const responseText = await response.text();
+      const data = contentType.includes("application/json")
+        ? JSON.parse(responseText)
+        : null;
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch response");
+        const fallbackMessage = responseText.trim()
+          ? `Unexpected ${contentType || "non-JSON"} response from ${apiUrl}`
+          : "Failed to fetch response";
+        throw new Error(data?.error || fallbackMessage);
       }
 
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: data.reply,
+        content: data?.reply || "No response returned from the chatbot.",
       };
 
       setMessages((prev) => [...prev, aiMsg]);
