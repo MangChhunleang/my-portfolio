@@ -49,7 +49,8 @@ export function ChatWidget() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
+      const apiUrl = import.meta.env.PROD ? '/chatbot/chat' : '/api/chat';
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
