@@ -1,22 +1,47 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+features:
+- buildpack-stack=ubuntu-22
 name: my-portfolio
+region: sgp
+ingress:
+  rules:
+  - component:
+      name: my-portfolio
+    match:
+      authority: {}
+      path:
+        prefix: /
+  - component:
+      name: chatbot
+    match:
+      authority: {}
+      path:
+        prefix: /chatbot
 static_sites:
-- name: portfolio-frontend
-  github:
-    branch: main
-    repo: MangChhunleang/my-portfolio
-  build_command: npm run build
-  source_dir: /
-  output_dir: dist
+- build_command: npm run build
   environment_slug: node-js
   envs:
   - key: NPM_CONFIG_PRODUCTION
     scope: BUILD_TIME
     type: GENERAL
     value: "false"
-
-functions:
-- name: chatbot
   github:
     branch: main
+    deploy_on_push: true
     repo: MangChhunleang/my-portfolio
+  name: my-portfolio
+  output_dir: dist
+  source_dir: /
+functions:
+- envs:
+  - key: GEMINI_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: MangChhunleang/my-portfolio
+  name: chatbot
   source_dir: /
