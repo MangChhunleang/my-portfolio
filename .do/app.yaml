@@ -3,15 +3,20 @@ static_sites:
 - name: portfolio-frontend
   github:
     branch: main
-    repo: your-github-username/your-repository-name
+    repo: MangChhunleang/my-portfolio
   build_command: npm run build
   source_dir: /
   output_dir: dist
   environment_slug: node-js
+  envs:
+  - key: NPM_CONFIG_PRODUCTION
+    scope: BUILD_TIME
+    type: GENERAL
+    value: "false"
 
 functions:
 - name: chatbot
   github:
     branch: main
-    repo: your-github-username/your-repository-name
+    repo: MangChhunleang/my-portfolio
   source_dir: /
