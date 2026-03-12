@@ -1,20 +1,17 @@
 import { GoogleGenAI } from '@google/genai';
 
-// Determine the API key from environment
-// DigitalOcean uses 'process.env.GEMINI_API_KEY'
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY
-});
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+/**
+ * DigitalOcean Functions entry point.
+ * The platform passes the parsed JSON request body as `args`.
+ * Return value must be: { body, statusCode, headers }
+ */
 export const main = async (args) => {
   try {
     const userMessage = args.message || "Hello";
-    // We expect the frontend to pass 'history' if we want real memory, but for a simple stateless bot we just use the system prompt.
-    // DigitalOcean receives args parsed from JSON body for POST requests.
-    
-    // Use portfolio data if provided from the frontend, otherwise fallback to defaults
     const portfolio = args.portfolio;
-    
+
     let systemInstruction = `You are a helpful, professional, and friendly AI assistant for Mang Chhunleang's portfolio site.
 Your goal is to answer questions about Mang's experience, skills, and projects, and encourage users to contact him.
 Mang is a Full-Stack Software Developer based in Phnom Penh (open to remote).
@@ -39,31 +36,25 @@ Context about him:
     }
 
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: userMessage,
-        config: {
-            systemInstruction: systemInstruction,
-            temperature: 0.7,
-        }
+      model: 'gemini-2.0-flash',
+      contents: userMessage,
+      config: {
+        systemInstruction,
+        temperature: 0.7,
+      },
     });
 
     return {
-      body: {
-        reply: response.text,
-      },
       statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' },
+      body: { reply: response.text },
     };
   } catch (error) {
-    console.error(error);
+    console.error('[chatbot/chat] Error:', error);
     return {
-      body: { error: error.message || 'Failed to process request' },
       statusCode: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' },
+      body: { error: error.message || 'Failed to process request' },
     };
   }
 };
