@@ -1,0 +1,18 @@
+# DigitalOcean Functions project root.
+# App Platform expects this file alongside the top-level `packages/` directory.
+parameters: {}
+environment: {}
+packages:
+  - name: chatbot
+    environment: {}
+    parameters: {}
+    annotations: {}
+    functions:
+      - name: chat
+        binary: false
+        main: ""
+        runtime: "nodejs:18"
+        web: true
+        parameters: {}
+        environment:
+          GEMINI_API_KEY: "${GEMINI_API_KEY}"

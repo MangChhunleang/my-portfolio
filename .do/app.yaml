@@ -44,4 +44,4 @@ functions:
     deploy_on_push: true
     repo: MangChhunleang/my-portfolio
   name: chatbot
-  source_dir: /packages
+  source_dir: /
