@@ -8,17 +8,17 @@ region: sgp
 ingress:
   rules:
   - component:
-      name: my-portfolio
-    match:
-      authority: {}
-      path:
-        prefix: /
-  - component:
       name: chatbot
     match:
       authority: {}
       path:
         prefix: /chatbot
+  - component:
+      name: my-portfolio
+    match:
+      authority: {}
+      path:
+        prefix: /
 static_sites:
 - build_command: npm run build
   environment_slug: node-js
