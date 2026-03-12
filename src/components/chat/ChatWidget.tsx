@@ -23,7 +23,7 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const apiUrl = import.meta.env.PROD ? "/chatbot/chatbot/chat" : "/api/chat";
+  const apiUrl = import.meta.env.PROD ? "/chatbot/chat" : "/api/chat";
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

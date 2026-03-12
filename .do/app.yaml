@@ -9,6 +9,13 @@ ingress:
   rules:
   - component:
       name: chatbot
+      rewrite: /chatbot/chat
+    match:
+      authority: {}
+      path:
+        prefix: /chatbot/chat
+  - component:
+      name: chatbot
     match:
       authority: {}
       path:
