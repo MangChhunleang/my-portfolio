@@ -11,7 +11,7 @@ ingress:
       name: chatbot
     match:
       path:
-        prefix: /chatbot/chat
+        prefix: /chatbot
   - component:
       name: my-portfolio
     match:
