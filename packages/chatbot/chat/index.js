@@ -1,6 +1,6 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 /**
  * DigitalOcean Functions entry point.
@@ -35,19 +35,24 @@ Context about him:
 - Projects: ${portfolio.projects.map(p => `${p.title} (${p.category}): ${p.summary}`).join(" | ")}`;
     }
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents: userMessage,
-      config: {
-        systemInstruction,
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash", 
+      systemInstruction
+    });
+
+    const response = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+      generationConfig: {
         temperature: 0.7,
       },
     });
 
+    const replyText = response.response.text();
+
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: { reply: response.text },
+      body: { reply: replyText },
     };
   } catch (error) {
     console.error('[chatbot/chat] Error:', error);
