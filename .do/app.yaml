@@ -17,11 +17,8 @@ ingress:
     match:
       path:
         prefix: /
-services:
+static_sites:
 - build_command: npm run build
-  run_command: npm start
-  environment_slug: node-js
-  http_port: 8080
   envs:
   - key: NPM_CONFIG_PRODUCTION
     scope: BUILD_TIME
@@ -32,6 +29,7 @@ services:
     deploy_on_push: true
     repo: MangChhunleang/my-portfolio
   name: my-portfolio
+  output_dir: dist
   source_dir: /
 functions:
 - envs:
