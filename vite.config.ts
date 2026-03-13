@@ -35,10 +35,10 @@ export default defineConfig(({ mode }) => {
                     return;
                   }
 
-                  // Dynamic import so @google/genai is never bundled into
+                  // Dynamic import so @google/generative-ai is never bundled into
                   // the frontend and is only resolved at dev-server runtime.
-                  const { GoogleGenAI } = await import('@google/genai');
-                  const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
+                  const { GoogleGenerativeAI } = await import('@google/generative-ai');
+                  const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
 
                   let systemInstruction = `You are a helpful, professional, and friendly AI assistant for Mang Chhunleang's portfolio site.
 Your goal is to answer questions about Mang's experience, skills, and projects, and encourage users to contact him.
@@ -63,18 +63,23 @@ Context about him:
 - Projects: ${portfolio.projects.map((p: { title: string; category: string; summary: string }) => `${p.title} (${p.category}): ${p.summary}`).join(" | ")}`;
                   }
 
-                  const response = await ai.models.generateContent({
-                    model: 'gemini-2.0-flash',
-                    contents: message,
-                    config: {
-                      systemInstruction,
+                  const model = genAI.getGenerativeModel({
+                    model: "gemini-2.5-flash", 
+                    systemInstruction
+                  });
+
+                  const response = await model.generateContent({
+                    contents: [{ role: 'user', parts: [{ text: message }] }],
+                    generationConfig: {
                       temperature: 0.7,
                     },
                   });
 
+                  const replyText = response.response.text();
+
                   res.statusCode = 200;
                   res.setHeader('Content-Type', 'application/json');
-                  res.end(JSON.stringify({ reply: response.text }));
+                  res.end(JSON.stringify({ reply: replyText }));
                 } catch (error) {
                   console.error('[mock-do-function] Error:', error);
                   res.statusCode = 500;
