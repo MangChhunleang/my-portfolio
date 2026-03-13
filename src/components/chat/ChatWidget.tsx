@@ -24,7 +24,7 @@ export function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const apiUrl = import.meta.env.PROD
-    ? (import.meta.env.VITE_CHAT_API_URL || "/chatbot/chatbot/chat")
+    ? (import.meta.env.VITE_CHAT_API_URL || "/api/chatbot/chat")
     : "/api/chat";
 
   const scrollToBottom = () => {
