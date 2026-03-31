@@ -77,7 +77,7 @@ export const portfolio: PortfolioData = {
       ],
       challenges: "Ensuring real-time synchronization of rich text while securely managing subscriptions and AI API interactions.",
       outcomes: "Delivered a production-quality, reliable, and maintainable platform with advanced generative capabilities.",
-      links: { github: "https://github.com/MangChhunleang/ink-wellV2.git", live: "https://inkwell-app-zibwn.ondigitalocean.app/" },
+      links: { github: "https://github.com/MangChhunleang/ink-wellV2.git", live: "https://inknest-mrkt3.ondigitalocean.app/" },
       screenshots: [
         "Rich-text editor interface",
         "AI generation panel",
